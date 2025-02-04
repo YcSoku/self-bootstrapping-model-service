@@ -1,7 +1,7 @@
-import util
 import json
-import config
-from app.main import bp
+from ... import util
+from ... import config
+from . import bp
 from flask import request, abort, Response
 from .controllers import handle_mr, api_handlers
 

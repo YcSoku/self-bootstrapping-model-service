@@ -1,10 +1,10 @@
 import os
 import atexit
-import config
 import logging
-from app import create_app
-from util import StorageMonitor
-from model import launcher, Dispatcher, monitoring
+from . import config
+from .app import create_app
+from .util import StorageMonitor
+from .model import launcher, Dispatcher, monitoring
 
 def initialize_work_space():
 
@@ -29,12 +29,16 @@ class Filter200(logging.Filter):
         return " 200 " not in record.getMessage()
 
 werkzeug_logger.addFilter(Filter200())
-    
 
-if __name__ == '__main__':
+def run():
     
     initialize_work_space()
 
     app = create_app()
     
     app.run(host = "0.0.0.0", port = config.APP_PORT, debug = config.APP_DEBUG)
+    
+
+if __name__ == '__main__':
+    
+    run()

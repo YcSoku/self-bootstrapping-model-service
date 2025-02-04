@@ -1,17 +1,17 @@
-import os
-import sys
+# Development Helpers #########################################################################################
 
-module_path = os.path.abspath(os.path.join(os.getcwd()))
-if module_path not in sys.path:
-    sys.path.append(module_path)
+from typing import TYPE_CHECKING
+
+# Import model here for develepment purpose
+if TYPE_CHECKING:
+    from .... import model
     
-import model
-import config
+# Execution Members #########################################################################################
 
 def process_message(name: str):
     return f'Hello {name}!'
 
-##########################################################################################
+# MCR Runner #########################################################################################
 
 @model.model_status_controller_sync
 def run_hello_mcr(mcr: model.ModelCaseReference):
@@ -24,7 +24,7 @@ def run_hello_mcr(mcr: model.ModelCaseReference):
         'message': message
     }
 
-##########################################################################################
+# Basic Members #########################################################################################
 
 NAME = 'Hello'
 

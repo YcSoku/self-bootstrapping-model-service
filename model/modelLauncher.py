@@ -1,13 +1,14 @@
 import os
 import sys
-import util
 import json
 import types
-import config
 import marshal
 import traceback
 import functools
 import py_compile
+from .. import util
+from .. import model
+from .. import config
 from .dispatcher import Dispatcher
 from .modelCaseReference import ModelCaseReference as MCR
 
@@ -111,7 +112,9 @@ class ModelLauncher:
         
         code_obj = load_code_from_pyc(self.program_path)
         
-        local_namespace = {}
+        local_namespace = {
+            'model': model,
+        }
         exec(code_obj, local_namespace, local_namespace)
         
         self.name = local_namespace['NAME'] if 'NAME' in local_namespace else 'Unknown Name'

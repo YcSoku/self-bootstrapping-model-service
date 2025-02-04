@@ -1,6 +1,6 @@
 import os
-import config
 import shutil
+from .. import config
 from concurrent.futures import ThreadPoolExecutor, as_completed
     
 def get_filenames(path, ignore=[]):

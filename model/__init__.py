@@ -1,5 +1,5 @@
 import queue
-import config
+from .. import config
 import multiprocessing
 
 from .dispatcher import Dispatcher

@@ -1,8 +1,8 @@
 import os
 import json
-import model
-import config
-from util import StorageMonitor
+from ... import model
+from ... import config
+from ...util import StorageMonitor
 
 ######################################## Handler for Model Case ########################################
 

@@ -1,8 +1,8 @@
 import os
-import util
 import json
-import config
 import datetime
+from .. import util
+from .. import config
 
 
 ######################################## Utils ########################################
