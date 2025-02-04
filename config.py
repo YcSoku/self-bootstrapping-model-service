@@ -48,7 +48,7 @@ DIR_STORAGE_LOG                                 =       os.path.join(DIR_ROOT, '
 
 
 MODEL_REGISTRY                                  =       {
-                                                            API_MR_FE_Hello: 'example/hello.py',
+                                                            # API_MR_FE_Hello: 'example/hello.py',
                                                         }
 
 APP_IGNORE_THINGS                               =       [

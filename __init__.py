@@ -2,6 +2,7 @@ import os
 import atexit
 import logging
 from . import config
+from . import registry
 from .app import create_app
 from .util import StorageMonitor
 from .model import launcher, Dispatcher, monitoring
@@ -11,7 +12,9 @@ def initialize_work_space():
     if not os.path.exists(config.DIR_MODEL_CASE):
         os.makedirs(config.DIR_MODEL_CASE)
         
-    for key in config.MODEL_REGISTRY:
+    # for key in config.MODEL_REGISTRY:
+    #     launcher.preheat(key)
+    for key in registry.get_registry():
         launcher.preheat(key)
          
     StorageMonitor().initialize([config.DIR_ROOT], config.DIR_STORAGE_LOG)

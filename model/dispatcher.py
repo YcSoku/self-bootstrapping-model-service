@@ -1,4 +1,5 @@
 import multiprocessing
+from .. import registry
         
 ####################################################################################################
 
@@ -18,7 +19,7 @@ class Dispatcher:
         self._task_queue = multiprocessing.Queue()
         self._stop_event = multiprocessing.Event()
         self._delete_queue = multiprocessing.Queue()
-        self._process_manager = multiprocessing.Process(target=func, args=(self._task_queue, self._delete_queue, self._lock, self._stop_event))
+        self._process_manager = multiprocessing.Process(target=func, args=(self._task_queue, self._delete_queue, self._lock, self._stop_event, registry.get_registry()))
         self._process_manager.start()
     
     def dispatch(self, command):

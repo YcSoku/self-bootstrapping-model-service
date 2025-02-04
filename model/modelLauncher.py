@@ -9,6 +9,7 @@ import py_compile
 from .. import util
 from .. import model
 from .. import config
+from .. import registry
 from .dispatcher import Dispatcher
 from .modelCaseReference import ModelCaseReference as MCR
 
@@ -102,12 +103,12 @@ def compile_model_script_to_pyc(model_api: str, script_path: str):
 
 class ModelLauncher:
     
-    def __init__(self, api: str):
+    def __init__(self, api: str, script_path: str = None):
         
         self.api = api
         self.lock = None
         self.id = util.generate_md5(api)
-        self.script_path = os.path.join(config.DIR_RESOURCE_MODEL_TRIGGER, config.MODEL_REGISTRY[api])
+        self.script_path = os.path.join(config.DIR_RESOURCE_MODEL_TRIGGER, script_path if script_path else registry.get_registry()[api])
         self.program_path = os.path.join(config.DIR_RESOURCE_MODEL, self.id, get_pyc_filename(self.id))
         
         code_obj = load_code_from_pyc(self.program_path)
@@ -128,7 +129,7 @@ class ModelLauncher:
     @staticmethod
     def preheat(api: str):
         
-        script_path = os.path.join(config.DIR_RESOURCE_MODEL_TRIGGER, config.MODEL_REGISTRY[api])
+        script_path = os.path.join(config.DIR_RESOURCE_MODEL_TRIGGER, registry.get_registry()[api])
         compile_model_script_to_pyc(api, script_path)
 
     def dispatch(self, request_json: dict, other_dependent_ids: list[str] = []) -> MCR:
@@ -223,6 +224,9 @@ class ModelLauncher:
     @staticmethod
     def launch(lock, args: list[str]):
         
-        launcher = ModelLauncher(args[0])
+        # args[0]: api
+        # args[-1]: the script path
+        # args[1:-1]: running arguments
+        launcher = ModelLauncher(args[0], args[-1])
         launcher.lock = lock
-        launcher.fire(args[1:])
+        launcher.fire(args[1:-1])
