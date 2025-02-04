@@ -300,34 +300,6 @@ GET /v0/fs/result/file?id="{ case-id }"&name="{ filename }"
 
 <font color=red> **404** Model Case ID Not Found </font>  
 
-
-### Get Resource File by Directory
-
-Get a resoruce file by directory.
-
-```
-GET /v0/fs/resource/file?name="{ file-directory }"
-```
-
-#### Responses  
-
-<font color=green> **200** OK </font>  
-
-**Response schema**: application/octet-stream
-
-<font color=red> **404** Filename Not Found </font>  
-
-<font color=red> **404** Model Case ID Not Found </font>  
-
-
-### Get Result File Zip
-
-Get a zip of the result files in a specific model case.
-
-```
-GET /v0/fs/result/zip?id="{ case-id }"
-```
-
 #### Responses  
 
 <font color=green> **200** OK </font>  
@@ -340,25 +312,21 @@ GET /v0/fs/result/zip?id="{ case-id }"
 ---
 
 
-## Riverbed Evolution  
+## First Example 
 
-### Calculate Region Flush (<font color=red>Async</font>)
+### Hello (<font color=red>Async</font>)
 
-Calculate the flush result by dem resource at two timepoints within a specific region or the full area. 
-
-- If "region-geometry" in request body is "NONE", server will calculate the global flush.
+Hello SBMS
 
 ```
-POST /v0/re/region-flush
+POST /v0/fe/hello
 ```
 
 **Request body schema**: application/json
 
 ```json
 {
-    "bench-id": "{ dem-file-name }",
-    "ref-id": "{ dem-file-name }",
-    "region-geometry": "{ GeoJson }" || "NONE"
+    "name": "{ string-name }"
 }
 ```
 
@@ -366,32 +334,7 @@ POST /v0/re/region-flush
 
 ``````json
 {
-    "bench-id": "199801_dem/w001001.adf",
-    "ref-id": "200408_dem/w001001.adf",
-    "region-geometry": {
-      "type": "FeatureCollection",
-      "features": [
-        {
-          "type": "Feature",
-          "properties": {
-            "name": "Example Polygon"
-          },
-          "geometry": {
-            "type": "Polygon",
-            "coordinates": [
-              [
-                [121.35857784308524,31.660508611487913],
-                [121.29264135171792,31.576285441022137],
-                [121.45748258013526,31.57394482076768],
-                [121.3860513811536,31.508383603511106],
-                [121.50693494865948,31.56458175211411],
-                [121.35857784308524,31.660508611487913]
-              ]
-            ]
-          }
-        }
-      ]
-  	}
+    "name": "SBMS"
 }
 ``````
 
@@ -405,162 +348,7 @@ POST /v0/re/region-flush
 {
     "case-id": "{ case-id }",
   	"model": "{ model-name }",
-    "raw-tif": "{ file-name }" || "NONE",
-    "extent-json": "{ file-name }" || "NONE",
-    "visualization-png": "{ file-name }" || "NONE",
+    "message": "{ string-message }" || "NONE"
 }
 ```
 
-<font color=red> **404** Dem Resource Not Found </font>  
-
-
-
-### Calculate Section View (<font color=red>Async</font>)
-
-Calculate the section view and slope ratio by a specific dem resource.
-
-```
-POST /v0/re/section-view
-```
-
-**Request body schema**: application/json
-
-```json
-{
-    "dem-id": "{ dem-file-name }",
-    "section-geometry": "{ GeoJson }"
-}
-```
-
-#### Responses  
-
-<font color=green> **200** OK </font>  
-
-**Response schema**: application/json
-
-```json
-{
-    "case-id": "{ case-id }",
-  	"model": "{ model-name }",
-    "raw-json": "{ file-name }" || "NONE",
-    "visualization-txt": "{ file-name }" || "NONE"
-    "interval": "{ number }" || "NONE"
-}
-```
-
-<font color=red> **404** Dem Resource Not Found </font>  
-
-
-
-### Calculate Section Contrast (<font color=red>Async</font>)
-
-Calculate the flush from the perspective of section and provide a section views at two timepoints.
-
-```
-POST /v0/re/section-contrast
-```
-
-**Request body schema**: application/json
-
-```json
-{
-    "bench-id": "{ dem-file-name }",
-  	"ref-id": "{ dem-file-name }",
-    "section-geometry": "{ GeoJson }"
-}
-```
-
-#### Responses  
-
-<font color=green> **200** OK </font>  
-
-**Response schema**: application/json
-
-```json
-{
-    "case-id": "{ case-id }",
-  	"model": "{ model-name }",
-    "raw-txt": "{ file-name }" || "NONE"
-    "interval": "{ number }" || "NONE"
-}
-```
-
-<font color=red> **404** Dem Resource Not Found </font>  
-
-
-
-### Calculate River Volume (<font color=red>Async</font>)
-
-Calculate the river volume within a specific region.
-
-```
-POST /v0/re/river-volume
-```
-
-**Request body schema**: application/json
-
-```json
-{
-  	"dem-id": "{ dem-file-name }",
-    "region-geometry": "{ GeoJson }",
-    "water-depth": "{ number-water-depth }"
-}
-```
-
-#### Responses  
-
-<font color=green> **200** OK </font>  
-
-**Response schema**: application/json
-
-```json
-{
-    "case-id": "{ case-id }",
-  	"model": "{ model-name }",
-  	"raw-tif": "{ file-name }" || "NONE",
-    "extent-json": "{ file-name }" || "NONE",
-  	"visualization-png": "{ file-name }" || "NONE",
-    "volume-summary-txt": "{ file-name }" || "NONE",
-}
-```
-
-<font color=red> **404** Dem Resource Not Found </font>  
-
-
-
-### Calculate Region Contour (<font color=red>Async</font>)
-
-Calculate the contour lines within a specific region or the full area. 
-
-- If "region-geometry" in request body is "NONE", server will calculate the global flush contour lines.
-
-```
-POST /v0/re/region-contour
-```
-
-**Request body schema**: application/json
-
-```json
-{
-  	"bench-id": "{ dem-file-name }",
-  	"ref-id": "{ dem-file-name }",
-    "region-geometry": "{ GeoJson }"
-}
-```
-
-#### Responses  
-
-<font color=green> **200** OK </font>  
-
-**Response schema**: application/json
-
-```json
-{
-    "case-id": "{ case-id }",
-  	"model": "{ model-name }",
-  	"raw-shp": "{ file-name }" || "NONE",
-    "visualization-geojson": "{ file-name }" || "NONE"
-}
-```
-
-<font color=red> **404** Dem Resource Not Found </font>  
