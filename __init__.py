@@ -1,6 +1,7 @@
 import os
 import atexit
 import logging
+import webbrowser
 from flask import Blueprint
 
 from . import config
@@ -36,7 +37,14 @@ class Filter200(logging.Filter):
 
 werkzeug_logger.addFilter(Filter200())
 
-def run(name: str = None, bps: list[Blueprint] = None, template_folder: str = None, static_folder: str = None, static_url_path: str = None):
+def run(
+    name: str = None, 
+    bps: list[Blueprint] = None, 
+    template_folder: str = None, 
+    static_folder: str = None, 
+    static_url_path: str = None,
+    open_browser: bool = True
+):
     
     initialize_work_space()
 
@@ -48,6 +56,9 @@ def run(name: str = None, bps: list[Blueprint] = None, template_folder: str = No
         static_url_path
     )
     
+    if open_browser:
+        webbrowser.open(f'http://localhost:{config.APP_PORT}/')
+        
     app.run(host = "0.0.0.0", port = config.APP_PORT, debug = config.APP_DEBUG)
     
 

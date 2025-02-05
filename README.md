@@ -94,7 +94,8 @@ The basic condition for MCR to be **EFFECTIVE** is that when the model and param
 - Dependencies:
   
 ```
-    flask
+    Flask
+    Flask-Cors
 ```
 
 - Run: 

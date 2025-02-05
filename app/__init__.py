@@ -1,5 +1,5 @@
-from flask import Flask, Blueprint
 from flask_cors import CORS
+from flask import Flask, Blueprint
     
 def create_app(name: str = None, bps: list[Blueprint] = None, template_folder: str = None, static_folder: str = None, static_url_path: str = None) -> Flask:
     
