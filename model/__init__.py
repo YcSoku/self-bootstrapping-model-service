@@ -32,8 +32,6 @@ def monitoring(task_queue: queue.Queue[any], delete_queue: queue.Queue[any], loc
         if len(execution_set) <= config.MAX_RUNNING_MODEL_CASE_NUM and core_mc_id not in execution_set:
             
             execution_set.add(core_mc_id)
-            
-            print(registry, command[0])
             process = multiprocessing.Process(target=launcher.launch, args=(lock, command + [registry[command[0]]]))
             process_dict[core_mc_id] = process
             process.start()

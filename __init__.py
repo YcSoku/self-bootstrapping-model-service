@@ -1,6 +1,8 @@
 import os
 import atexit
 import logging
+from flask import Blueprint
+
 from . import config
 from . import registry
 from .app import create_app
@@ -8,12 +10,13 @@ from .util import StorageMonitor
 from .model import launcher, Dispatcher, monitoring
 
 def initialize_work_space():
+    
+    if config.APP_DEBUG:
+        util.delete_folder_contents(config.DIR_MODEL_CASE)
 
     if not os.path.exists(config.DIR_MODEL_CASE):
         os.makedirs(config.DIR_MODEL_CASE)
         
-    # for key in config.MODEL_REGISTRY:
-    #     launcher.preheat(key)
     for key in registry.get_registry():
         launcher.preheat(key)
          
@@ -33,11 +36,17 @@ class Filter200(logging.Filter):
 
 werkzeug_logger.addFilter(Filter200())
 
-def run():
+def run(name: str = None, bps: list[Blueprint] = None, template_folder: str = None, static_folder: str = None, static_url_path: str = None):
     
     initialize_work_space()
 
-    app = create_app()
+    app = create_app(
+        name,
+        bps,
+        template_folder,
+        static_folder,
+        static_url_path
+    )
     
     app.run(host = "0.0.0.0", port = config.APP_PORT, debug = config.APP_DEBUG)
     

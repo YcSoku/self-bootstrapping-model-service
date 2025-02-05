@@ -1,8 +1,11 @@
+import os
+import re
 import json
+from flask import request, abort, Response, jsonify, send_file
+
+from . import bp
 from ... import util
 from ... import config
-from . import bp
-from flask import request, abort, Response
 from .controllers import handle_mr, api_handlers
 
 ######################################## API for Model Case ########################################
@@ -112,6 +115,61 @@ def get_model_case_file():
                         headers={'Content-Disposition': f'attachment; filename={response}'})
     if status == 404:
         abort(404, description=response)
+
+@bp.route(config.API_FS_GET_RESULT_ZIP, methods=[ 'GET' ]) 
+def download_processed_zip():
+
+    # Calculate the download path
+    case_id = request.args.get('id', type=str)
+    filename = request.args.get('name', type=str)
+    file_path = os.path.join(config.DIR_MODEL_CASE, case_id, 'result', filename)
+    
+    # Case file not found
+    if not os.path.exists(file_path):
+        return jsonify({
+            'status': 404,
+            'message': 'File not found'
+        }), 404
+    
+    range_header = request.headers.get('Range', None)
+
+    # Case file transfer by whole
+    if not range_header:
+        return send_file(file_path, as_attachment=True, download_name='gridInfo.zip')
+
+    # Case file transfer by range
+    match = re.match(r'bytes=(\d+)-(\d+)?', range_header)
+    file_size = os.path.getsize(file_path)
+
+    if not match:
+        return jsonify({
+            'status': 416, # requested range not satisfiable
+            'message': 'Invalid Range'
+        }), 416
+
+    # Calc the chunk range
+    start, end = match.groups()
+    start = int(start)
+    end = int(end) if end else file_size - 1
+    end = min(end, file_size - 1)
+    content_length = end - start + 1
+
+    if start >= file_size or end >= file_size or start > end:
+        return jsonify({
+            'status': 416,
+            'message': 'Invalid Range'
+        }), 416
+    
+    response = Response()
+    response.status_code = 206 # partial content
+    response.headers['Content-Range'] = f'bytes {start}-{end}/{file_size}'
+    response.headers['Content-Length'] = str(content_length)
+    response.headers['Content-Type'] = 'application/zip'
+    with open(file_path, 'rb') as f:
+        f.seek(start)
+        response.data = f.read(content_length)
+
+    return response
 
 ######################################## API for Models ########################################
 

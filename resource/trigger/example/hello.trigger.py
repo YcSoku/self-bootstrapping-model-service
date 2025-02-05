@@ -1,8 +1,7 @@
 # Development Helpers #########################################################################################
+# Import sbms related modules here for develepment purpose
 
 from typing import TYPE_CHECKING
-
-# Import model here for develepment purpose
 if TYPE_CHECKING:
     from .... import model
     
@@ -14,7 +13,7 @@ def process_message(name: str):
 # MCR Runner #########################################################################################
 
 @model.model_status_controller_sync
-def run_hello_mcr(mcr: model.ModelCaseReference):
+def run_(mcr: model.ModelCaseReference):
     
     name = mcr.request_json['name']
     message = process_message(name)
@@ -51,6 +50,5 @@ def RUNNING(self: model.launcher, args: list[str]):
     
     hello_mcr = self.connect_model_case(v1)
     
-    # Run section view model case
-    run_hello_mcr(hello_mcr)
+    run_(hello_mcr)
     

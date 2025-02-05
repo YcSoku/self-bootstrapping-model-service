@@ -21,6 +21,7 @@ API_MCS_POST_SERIALIZATION                      =       API_VERSION + '/mcs/seri
 # API for File System           
 API_FS_GET_DISK_USAGE                           =       API_VERSION + '/fs/usage'
 API_FS_GET_RESULT_FILE                          =       API_VERSION + '/fs/result/file'
+API_FS_GET_RESULT_ZIP                      =       API_VERSION + '/fs/result/zip'
 
 # API for Model Runner
 API_MR                                          =       API_VERSION + '/<category>/<model_name>'
@@ -45,11 +46,6 @@ DIR_MODEL                                       =       os.path.join(DIR_ROOT, '
 DIR_RESOURCE_MODEL                              =       os.path.join(DIR_ROOT, 'resource', 'model')
 DIR_RESOURCE_MODEL_TRIGGER                      =       os.path.join(DIR_ROOT, 'resource', 'trigger')
 DIR_STORAGE_LOG                                 =       os.path.join(DIR_ROOT, 'resource', 'storage', 'log.txt')
-
-
-MODEL_REGISTRY                                  =       {
-                                                            # API_MR_FE_Hello: 'example/hello.py',
-                                                        }
 
 APP_IGNORE_THINGS                               =       [
                                                             '.DS_Store',

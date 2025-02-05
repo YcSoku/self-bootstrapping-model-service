@@ -103,17 +103,18 @@ def compile_model_script_to_pyc(model_api: str, script_path: str):
 
 class ModelLauncher:
     
-    def __init__(self, api: str, script_path: str = None):
+    def __init__(self, api: str, script_abs_path: str = None):
         
         self.api = api
         self.lock = None
         self.id = util.generate_md5(api)
-        self.script_path = os.path.join(config.DIR_RESOURCE_MODEL_TRIGGER, script_path if script_path else registry.get_registry()[api])
+        self.script_abs_path = script_abs_path if script_abs_path else registry.get_registry()[api]
         self.program_path = os.path.join(config.DIR_RESOURCE_MODEL, self.id, get_pyc_filename(self.id))
         
         code_obj = load_code_from_pyc(self.program_path)
         
         local_namespace = {
+            'util': util,
             'model': model,
         }
         exec(code_obj, local_namespace, local_namespace)
@@ -129,8 +130,8 @@ class ModelLauncher:
     @staticmethod
     def preheat(api: str):
         
-        script_path = os.path.join(config.DIR_RESOURCE_MODEL_TRIGGER, registry.get_registry()[api])
-        compile_model_script_to_pyc(api, script_path)
+        script_abs_path = registry.get_registry()[api]
+        compile_model_script_to_pyc(api, script_abs_path)
 
     def dispatch(self, request_json: dict, other_dependent_ids: list[str] = []) -> MCR:
         
@@ -225,8 +226,8 @@ class ModelLauncher:
     def launch(lock, args: list[str]):
         
         # args[0]: api
-        # args[-1]: the script path
         # args[1:-1]: running arguments
+        # args[-1]: the script absolute path
         launcher = ModelLauncher(args[0], args[-1])
         launcher.lock = lock
-        launcher.fire(args[1:-1])
+        launcher.fire(args[1 : -1])
