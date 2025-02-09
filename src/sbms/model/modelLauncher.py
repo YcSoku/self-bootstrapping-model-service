@@ -149,6 +149,9 @@ class ModelLauncher:
             # Make default response
             self.response(core_mcr=default_pre_mcrs[-1], default_pre_mcrs=default_pre_mcrs[:-1], other_pre_mcrs=other_pre_mcrs)
         
+        # Release memory
+        self.destroy()
+        
         return mcrs[-1]
     
     def check_(self, mcrs: list[MCR]):
@@ -215,11 +218,19 @@ class ModelLauncher:
         mcr.lock = self.lock
         return mcr._update_call_time()
 
+    def destroy(self):
+        
+        self.lock = None   
+        
+        del self.fire
+        del self.parse
+        del self.response
+
     @staticmethod
     def fetch_model_from_API(api: str):
         
         launcher = ModelLauncher(api)
-        launcher.lock = Dispatcher()._lock
+        launcher.lock = Dispatcher().lock
         return launcher
     
     @staticmethod

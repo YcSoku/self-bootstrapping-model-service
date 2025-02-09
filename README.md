@@ -94,12 +94,12 @@ The basic condition for MCR to be **EFFECTIVE** is that when the model and param
 - Dependencies:
   
 ```
-    Flask
-    Flask-Cors
+    FastAPI
+    Portalocker
 ```
 
 - Run: 
   
 ```
-    python -u "run.py"
+    python "run.py"
 ```

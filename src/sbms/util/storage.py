@@ -25,7 +25,6 @@ class StorageMonitor:
         self.log_file = log_file
         self.folder_paths = folder_paths
         self.total_size_gb = self.calculate_folder_size()
-        # self.total_size_gb = 0
     
     def calculate_folder_size(self):
         
@@ -38,23 +37,29 @@ class StorageMonitor:
         return total_size / (1024 ** 3)
 
     def check_size(self):
-        
         with open(self.log_file, 'r+') as f:
-            portalocker.lock(f, portalocker.LOCK_EX)
-            size_changes = f.readlines()
-            
-            for change in size_changes:
-                self.total_size_gb += float(change.strip())
-            
-            f.seek(0)
-            f.truncate()
-            portalocker.unlock(f)
-        
+            try:
+                portalocker.lock(f, portalocker.LOCK_EX)
+
+                size_changes = (float(line.strip()) for line in f if line.strip())
+
+                for change in size_changes:
+                    self.total_size_gb += change
+
+                f.seek(0)
+                f.truncate()
+                
+            finally:
+                portalocker.unlock(f)
+
         return self.total_size_gb
     
     def get_size(self):
         
         return self.check_size()
+    
+    def destroy(self):
+        StorageMonitor._instance = None
     
 def update_size(log_file: str, size_change_gb: float):
     
