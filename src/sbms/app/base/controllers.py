@@ -8,7 +8,7 @@ from ...util import StorageMonitor
 
 def handle_get_status(case_id: str):
     
-    with model.Dispatcher()._lock:
+    with model.Dispatcher().lock:
         if not model.ModelCaseReference.has_case(case_id):
             return 404, f'Model Case ID ({case_id}) Not Found'
         
@@ -18,7 +18,7 @@ def handle_get_status(case_id: str):
 
 def handle_mc_get_error(case_id: str):
     
-    with model.Dispatcher()._lock:
+    with model.Dispatcher().lock:
         if not model.ModelCaseReference.has_case(case_id):
             return 404, f'Model Case ID ({case_id}) Not Found'
         
@@ -27,7 +27,7 @@ def handle_mc_get_error(case_id: str):
 
 def handle_mc_get_pre_error_cases(case_id: str):
     
-    with model.Dispatcher()._lock:
+    with model.Dispatcher().lock:
         if not model.ModelCaseReference.has_case(case_id):
             return 404, f'Model Case ID ({case_id}) Not Found'
         
@@ -39,7 +39,7 @@ def handle_mc_get_pre_error_cases(case_id: str):
     
 def handle_mc_get_result(case_id: str):
     
-    with model.Dispatcher()._lock:
+    with model.Dispatcher().lock:
         if not model.ModelCaseReference.has_case(case_id):
             return 404, f'Model Case ID ({case_id}) Not Found'
         
@@ -51,7 +51,7 @@ def handle_mc_get_result(case_id: str):
     
 def handle_mc_delete_case(case_id: str):
     
-    with model.Dispatcher()._lock:
+    with model.Dispatcher().lock:
         
         if not model.ModelCaseReference.has_case(case_id):
             return 404, f'Model Case ID ({case_id}) Not Found'
@@ -61,7 +61,7 @@ def handle_mc_delete_case(case_id: str):
 
 def handle_mcs_get_status(request_json: dict):
     
-    with model.Dispatcher()._lock:
+    with model.Dispatcher().lock:
         case_ids = request_json['case-ids']
         status_dict = {}
     
@@ -76,7 +76,7 @@ def handle_mcs_get_status(request_json: dict):
 
 def handle_mcs_get_call_status():
     
-    with model.Dispatcher()._lock:
+    with model.Dispatcher().lock:
     
         response = {
             'timestamps': []
@@ -134,7 +134,7 @@ def handle_mcs_get_serialization(request_json: dict):
 
 def handle_mcs_delete_cases(request_json: dict):
     
-    with model.Dispatcher()._lock:
+    with model.Dispatcher().lock:
         case_ids = request_json['case-ids']
         
         delete_ids = []
@@ -170,7 +170,7 @@ def handle_mr(api:str, request_json: dict):
     
     return 200, model.launcher.fetch_model_from_API(api).dispatch(request_json).make_response()
 
-api_handlers = {
+api_handlers: dict[str, any] = {
     
     # Model Case
     config.API_MC_GET_ERROR: handle_mc_get_error,
@@ -186,5 +186,8 @@ api_handlers = {
     
     # File System
     config.API_FS_GET_DISK_USAGE: handle_fs_get_disk_usage,
-    config.API_FS_GET_RESULT_FILE: handle_fs_get_model_case_file
+    config.API_FS_GET_RESULT_FILE: handle_fs_get_model_case_file,
+    
+    # Model Runner
+    config.API_MR: handle_mr
 }

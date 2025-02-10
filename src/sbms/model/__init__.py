@@ -117,11 +117,24 @@ def monitoring(task_queue: queue.Queue[any], delete_queue: queue.Queue[any], loc
                 except queue.Empty:
                     break
     
+    def clean_finished_processes():
+        
+        finished_processes = []
+        for case_id, process in process_dict.items():
+            if not process.is_alive():
+                process.terminate()
+                process.join()
+                finished_processes.append(case_id)
+        
+        for case_id in finished_processes:
+            del process_dict[case_id]
+    
     # Task loop
     try:
         while not stop_event.is_set():
             
             delete_model_cases()
+            clean_finished_processes()
             
             try:
                 command = task_queue.get_nowait()
@@ -134,4 +147,10 @@ def monitoring(task_queue: queue.Queue[any], delete_queue: queue.Queue[any], loc
                 waiting()
             
     except KeyboardInterrupt:
+        
+        for case_id in list(process_dict.keys()):
+            process_dict[case_id].terminate()
+            process_dict[case_id].join()
+            del process_dict[case_id]
+            
         print('Model dispatcher stopped', flush=True)

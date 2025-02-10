@@ -4,7 +4,7 @@ APP_PORT                                        =       8000
 APP_DEBUG                                       =       True
 
 # API Version           
-API_VERSION                                     =       '/v0'
+API_VERSION                                     =       '/api/v0'
 
 # API for Model Case            
 API_MC_DELETE_DELETE                            =       API_VERSION + '/mc'
@@ -20,14 +20,14 @@ API_MCS_POST_SERIALIZATION                      =       API_VERSION + '/mcs/seri
 
 # API for File System           
 API_FS_GET_DISK_USAGE                           =       API_VERSION + '/fs/usage'
+API_FS_GET_RESULT_ZIP                           =       API_VERSION + '/fs/result/zip'
 API_FS_GET_RESULT_FILE                          =       API_VERSION + '/fs/result/file'
-API_FS_GET_RESULT_ZIP                      =       API_VERSION + '/fs/result/zip'
 
 # API for Model Runner
-API_MR                                          =       API_VERSION + '/<category>/<model_name>'
+API_MR                                          =       API_VERSION + '/{category}/{model_name}'
 
-# API for First Example            
-API_MR_FE_Hello                                 =       API_VERSION + '/fe/hello'
+# API for docs
+API_DOCS                                        =       '/docs'
 
 # Status Flag           
 STATUS_UNLOCK                                   =       0b1
